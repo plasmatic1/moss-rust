@@ -1,6 +1,7 @@
 * `engine/`
     * `preprocessor/`: For preprocessing documents
     * `fingerprint/`: For fingerprinting algorithm
+    * `matching/`: For more fine-grained matching after fingerprinting
     * `logging.rs`: for perf/info logging utilities
     * `core.rs`: core code that ties together components in a distributed way
 * `ui/`
@@ -11,7 +12,7 @@
         * Not sure how to best design the architecture here...
     * `console.rs`: Command-line interface
 * `test/`
-    * `unit/`
+    * Unit tests bundled with source folders
     * `suite/`: Contains info for suite-style testing
     * `suitedata/`: Contains link to separate repository for collecting and maintaining datasets
     * `ci/`: CI scripts for gh
