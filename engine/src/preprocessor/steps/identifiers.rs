@@ -1,8 +1,8 @@
-use super::{Seq, Step};
+use crate::preprocessor::{Seq, Step};
 use std::collections::HashSet;
 
 // DFA for matching identifiers
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 enum DFA {
     // DFA states
     First, // Initial state
@@ -25,12 +25,12 @@ impl DFA {
                 Self::First | Self::Invalid => Self::Invalid,
                 _ => Self::Done
             }
-            Some(c) => match *self {
+            Some(c) => match self {
                 Self::First if c.is_alphabetic() || c == '_' => Self::SecondPlus,
                 Self::First => Self::Invalid,
                 Self::SecondPlus if c.is_alphanumeric() || c == '_' => Self::SecondPlus,
                 Self::SecondPlus => Self::Done,
-                o => o
+                o => *o
             }
         }
     }
@@ -40,23 +40,30 @@ impl DFA {
     }
 }
 
-/**
- * A step that normalizes identifiers into a single token.
- * - An identifier is a string consisting of alphanumeric characters and underscores, where the first character cannot be a digit
- * - The matcher is greedy: it will expand the current match until it can do so no longer
- * - A list of keywords can be supplied, which are matches that the matcher will ignore.  They should also be valid identifiers
- */
-pub fn identifiers(keywords: HashSet<&str>, normalize_into: char) -> Step {
-    |input: &Seq| {
+pub struct Identifiers<'a> {
+    keywords: HashSet<&'a str>,
+    normalize_into: char,
+}
+
+impl Step for Identifiers<'_> {
+    /**
+     * A step that normalizes identifiers into a single token.
+     * - An identifier is a string consisting of alphanumeric characters and underscores, where the first character cannot be a digit
+     * - The matcher is greedy: it will expand the current match until it can do so no longer
+     * - A list of keywords can be supplied, which are matches that the matcher will ignore.  They should also be valid identifiers
+     */
+    fn apply(&self, input: &Seq) -> Seq {
         let mut i = 0;
         let mut ret = vec![];
-        let mut buf: Vec<(usize, char)> = vec![];
 
         while i < input.len() {
             let mut dfa = DFA::new();
             let mut j = i;
             while !dfa.is_done() {
-                dfa = dfa.advance(input.get(j).1?);
+                dfa = dfa.advance(match input.get(j) {
+                    Some(c) => Some(c.1),
+                    None => None
+                });
                 j += 1
             }
 
@@ -65,11 +72,11 @@ pub fn identifiers(keywords: HashSet<&str>, normalize_into: char) -> Step {
             }
             else {
                 let matched_str = &input[i..j].iter().map(|c| c.1).collect::<String>();
-                if keywords.contains(matched_str.as_str()) { // oops, keyword
+                if self.keywords.contains(matched_str.as_str()) { // oops, keyword
                     ret.extend_from_slice(&input[i..j]);
                 }
                 else {
-                    ret.push((i, normalize_into));
+                    ret.push((i, self.normalize_into));
                 }
             }
 
@@ -77,5 +84,14 @@ pub fn identifiers(keywords: HashSet<&str>, normalize_into: char) -> Step {
         }
 
         ret
+    }
+}
+
+impl<'a> Identifiers<'a> {
+    pub fn new(keywords_vec: Vec<&'a str>, normalize_into: char) -> Self {
+        Self {
+            keywords: HashSet::from_iter(keywords_vec),
+            normalize_into
+        }
     }
 }

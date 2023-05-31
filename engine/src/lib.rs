@@ -1,7 +1,15 @@
-mod preprocessor;
+#[macro_use]
+extern crate lazy_static;
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+// submodules
+mod preprocessor;
+mod fingerprint;
+mod matching;
+mod logging;
+mod lang;
+
+fn add(a: i32, b: i32) -> i32 {
+    a + b
 }
 
 #[cfg(test)]
