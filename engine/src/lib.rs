@@ -1,12 +1,10 @@
-#[macro_use]
-extern crate lazy_static;
-
 // submodules
 mod preprocessor;
 mod fingerprint;
 mod matching;
 mod logging;
 mod lang;
+mod hash;
 
 fn add(a: i32, b: i32) -> i32 {
     a + b

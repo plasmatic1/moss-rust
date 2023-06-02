@@ -2,7 +2,7 @@
 type Seq = Vec<(usize, char)>;
 type Preprocessor = Vec<Box<dyn Step>>;
 
-trait Step {
+pub trait Step {
     fn apply(&self, input: &Seq) -> Seq;
 }
 
@@ -26,11 +26,11 @@ mod langs {
     mod cpp;
     mod python;
 
-    fn get_preprocessor(lang: Lang) -> &'static super::Preprocessor {
+    fn get_preprocessor(lang: Lang) -> super::Preprocessor {
         match lang {
-            Lang::Java => &java::PREPROCESSOR,
-            Lang::Cpp => &cpp::PREPROCESSOR,
-            Lang::Python => &python::PREPROCESSOR,
+            Lang::Java => java::get_preprocessor(),
+            Lang::Cpp => cpp::get_preprocessor(),
+            Lang::Python => python::get_preprocessor(),
         }
     }
 }
