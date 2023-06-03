@@ -4,8 +4,6 @@
 
 use static_init::dynamic;
 
-const LOW_64: i128 = (1 << 64) - 1;
-
 const MODULUS: i128 = 9223372036854775783; // python3 -c "import sympy; f = lambda n: n if sympy.isprime(n) else f(n-1); print(f(2**63))"
 const BASE: i128 = 11842660086381224053; // python3 -c "import random; random.seed(22443256); print(random.randint(1, 2**64-1))"
 
@@ -38,12 +36,12 @@ fn get_pow(mut p: usize) -> i128 {
     else { BASE_POWERS[p] }
 }
 
-struct Hash {
+pub struct HashState {
     val: i128,
     len: usize
 }
 
-impl Hash {
+impl HashState {
     pub fn new() -> Self {
         Self {
             val: 0,
@@ -51,10 +49,30 @@ impl Hash {
         }
     }
 
-    pub fn push(&mut self, c: char) {
+    pub fn from_str(s: &str) -> Self {
+        s.chars().fold(Self::new(), |mut acc, c| { acc.push_char(c); acc })
+    }
+
+    pub fn push_char(&mut self, c: char) {
         self.val = mod_add(mod_mul(self.val, BASE), c as i128);
         self.len += 1;
     }
 
-    // TODO: workon
+    pub fn pop_char(&mut self, c: char) {
+        self.val = mod_sub(self.val, mod_mul(get_pow(self.len - 1), c as i128));
+        self.len -= 1;
+    }
+
+    pub fn clear(&mut self) {
+        self.val = 0;
+        self.len = 0;
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
+    }
+
+    pub fn get_u64(&self) -> u64 {
+        self.val as u64
+    }
 }

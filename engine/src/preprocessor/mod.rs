@@ -11,12 +11,15 @@ pub fn apply(input: &str, steps: &Preprocessor) -> Seq {
     steps.iter().fold(init_seq, |cur_seq, step| { step.apply(&cur_seq) })
 }
 
+/// Different preprocessor steps that can be applied in sequence to form a full preprocessor
 mod steps {
     mod identifiers;
     mod whitespace;
+    mod replace;
 
     pub use identifiers::Identifiers;
     pub use whitespace::Whitespace;
+    pub use replace::SameSizeReplace;
 }
 
 mod langs {
@@ -26,7 +29,7 @@ mod langs {
     mod cpp;
     mod python;
 
-    fn get_preprocessor(lang: Lang) -> super::Preprocessor {
+    pub fn get_preprocessor(lang: Lang) -> super::Preprocessor {
         match lang {
             Lang::Java => java::get_preprocessor(),
             Lang::Cpp => cpp::get_preprocessor(),
@@ -34,3 +37,6 @@ mod langs {
         }
     }
 }
+
+#[cfg(test)]
+mod tests;
