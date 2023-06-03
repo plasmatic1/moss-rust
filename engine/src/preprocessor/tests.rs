@@ -1,4 +1,5 @@
 use super::*;
+use crate::lang::Lang;
 
 #[test]
 fn fib_python() {
