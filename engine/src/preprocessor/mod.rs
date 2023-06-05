@@ -16,13 +16,16 @@ mod steps {
     mod identifiers;
     mod whitespace;
     mod replace;
+    mod comment;
 
     pub use identifiers::Identifiers;
     pub use whitespace::Whitespace;
     pub use replace::SameSizeReplace;
+    pub use comment::Comment;
 }
 
-mod langs {
+/// Preprocessor implementations for various languages 
+pub mod langs {
     use crate::lang::Lang;
 
     mod java;

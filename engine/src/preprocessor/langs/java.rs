@@ -4,6 +4,12 @@ use crate::preprocessor::Preprocessor;
 // Keywords from: https://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html
 pub fn get_preprocessor() -> Preprocessor {
     vec![
+        // Comments
+        Box::new(steps::Comment::new(
+            "//",
+            ("/*", "*/"),
+        )),
+        // IDs
         Box::new(steps::Identifiers::new(
             vec![
                 "abstract",
