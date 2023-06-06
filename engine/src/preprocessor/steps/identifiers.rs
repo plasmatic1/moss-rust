@@ -68,9 +68,13 @@ impl Step for Identifiers<'_> {
             }
 
             if dfa == DFA::Invalid {
-                ret.push(input[j]);
+                ret.push(input[i]);
             }
             else {
+                if j < input.len() { // we read past the char in the token if we don't hit EOF, so we back up by 1 if we do
+                    j -= 1; 
+                }
+
                 let matched_str = &input[i..j].iter().map(|c| c.1).collect::<String>();
                 if self.keywords.contains(matched_str.as_str()) { // oops, keyword
                     ret.extend_from_slice(&input[i..j]);
