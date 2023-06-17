@@ -1,7 +1,15 @@
-/// Wlecome to the zone!!! TODO: elaborate on processing scheme
+//! Preprocessing is the first step done in the plagiarism detection engine.  It is responsible for source code into a language-agnostic 
+//! sequence of characters that can be checked for matching substrings.  Notably, code should be processed in a way such that matching substrings
+//! of sufficient length indicates copied code.
+//! 
+//! The preprocessor is implemented as a sequence of steps, each of which transforms the sequence of characters in some way.  Different language processors 
+//! use various configurations of steps to process code.
+//! 
+//! For the engine, the only interface that needs to be exposed is the langs::get_preprocessor and apply functions.
+
 /// In the preprocessor, strings are treated as pairs of (index, char) where the element s[i] denotes that the substring from indices
-/// s[i].0 to s[i+1].0-1 is compressed as s[i].1
-type Seq = Vec<(usize, char)>;
+/// s[i].0 to s[i+1].0-1 (inclusive) is compressed as s[i].1.  This is both crucial in intermediate steps and in the final result
+pub type Seq = Vec<(usize, char)>;
 
 /// A single step in a preprocessor that transforms a sequence of characters
 pub trait Step {

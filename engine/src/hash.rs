@@ -49,8 +49,12 @@ impl HashState {
         }
     }
 
+    pub fn from_iter(iter: impl Iterator<Item = char>) -> Self {
+        iter.fold(Self::new(), |mut acc, c| { acc.push_char(c); acc })
+    }
+
     pub fn from_str(s: &str) -> Self {
-        s.chars().fold(Self::new(), |mut acc, c| { acc.push_char(c); acc })
+        HashState::from_iter(s.chars())
     }
 
     pub fn push_char(&mut self, c: char) {
@@ -75,4 +79,9 @@ impl HashState {
     pub fn get_u64(&self) -> u64 {
         self.val as u64
     }
+}
+
+#[cfg(test)]
+mod tests {
+    // TODO
 }
