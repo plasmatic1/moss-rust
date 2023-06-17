@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use super::super::{Step, Seq};
-use crate::hash::HashState;
 
 /// A step that replaces substrings with characters, using a rolling hash algorithm to minimize runtime.
 /// The mappings are specified as a vector of tuples (s1 => c1), ..., (sk => ck).  For optimization reasons,
