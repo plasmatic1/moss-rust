@@ -1,3 +1,4 @@
+/// Wlecome to the zone!!! TODO: elaborate on processing scheme
 /// In the preprocessor, strings are treated as pairs of (index, char) where the element s[i] denotes that the substring from indices
 /// s[i].0 to s[i+1].0-1 is compressed as s[i].1
 type Seq = Vec<(usize, char)>;
@@ -18,6 +19,7 @@ pub fn apply(input: &str, steps: &Preprocessor) -> Seq {
 
 /// Different preprocessor steps that can be applied in sequence to form a full preprocessor
 mod steps {
+    #[cfg(not(test))]
     mod identifiers;
     mod whitespace;
     mod replace;
@@ -27,14 +29,20 @@ mod steps {
     pub use whitespace::Whitespace;
     pub use replace::SameSizeReplace;
     pub use comment::Comment;
+
+    #[cfg(test)]
+    pub mod identifiers;
 }
 
 /// Preprocessor implementations for various languages 
 pub mod langs {
     use crate::lang::Lang;
 
+    #[cfg(not(test))]
     mod java;
+    #[cfg(not(test))]
     mod cpp;
+    #[cfg(not(test))]
     mod python;
 
     pub fn get_preprocessor(lang: Lang) -> super::Preprocessor {
@@ -44,6 +52,13 @@ pub mod langs {
             Lang::Python => python::get_preprocessor(),
         }
     }
+
+    #[cfg(test)]
+    pub mod java;
+    #[cfg(test)]
+    pub mod cpp;
+    #[cfg(test)]
+    pub mod python;
 }
 
 #[cfg(test)]

@@ -1,5 +1,7 @@
 use crate::preprocessor::{Seq, Step};
-use std::collections::HashSet;
+use std::collections::HashMap;
+
+pub(crate) const KEYWORD_OFF: usize = '\u{E000}' as usize; // Smallest private use area unicode character
 
 // DFA for matching identifiers
 #[derive(PartialEq, Eq, Clone, Copy)]
@@ -41,7 +43,7 @@ impl DFA {
 }
 
 pub struct Identifiers<'a> {
-    keywords: HashSet<&'a str>,
+    keywords: HashMap<&'a str, char>,
     normalize_into: char,
 }
 
@@ -76,11 +78,11 @@ impl Step for Identifiers<'_> {
                 }
 
                 let matched_str = &input[i..j].iter().map(|c| c.1).collect::<String>();
-                if self.keywords.contains(matched_str.as_str()) { // oops, keyword
-                    ret.extend_from_slice(&input[i..j]);
+                if let Some(repl_chr) = self.keywords.get(matched_str.as_str()) { // oops, keyword
+                    ret.push((input[i].0, *repl_chr));
                 }
                 else {
-                    ret.push((i, self.normalize_into));
+                    ret.push((input[i].0, self.normalize_into));
                 }
             }
 
@@ -94,7 +96,7 @@ impl Step for Identifiers<'_> {
 impl<'a> Identifiers<'a> {
     pub fn new(keywords_vec: Vec<&'a str>, normalize_into: char) -> Self {
         Self {
-            keywords: HashSet::from_iter(keywords_vec),
+            keywords: HashMap::from_iter(keywords_vec.into_iter().enumerate().map(|(i, kw)| (kw, char::from_u32((KEYWORD_OFF + i) as u32).unwrap()))),
             normalize_into
         }
     }
