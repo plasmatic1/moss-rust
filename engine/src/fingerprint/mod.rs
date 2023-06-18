@@ -8,9 +8,9 @@ use crate::preprocessor::Seq;
 
 // TODO: maybe implement a more robust process rather than just as libraries
 // TODO: tests!!!
-// TODO: maybe move fs to the same level as db
 
 pub mod db;
+pub mod fs;
 
 /// Defined in the same way as crate::preprocessor::Seq, but stores the fingerprint of a document instead of its preprocessed form.
 /// The first element of each tuple is the position that the fingerprint starts at in the original document, and the second element is 

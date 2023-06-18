@@ -2,5 +2,3 @@
 
 // TODO: use https://github.com/rust-lang/odht
 // TODO: implement
-
-pub mod fs;
