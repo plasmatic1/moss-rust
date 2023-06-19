@@ -3,7 +3,7 @@
 
 use std::collections::VecDeque;
 
-use crate::hash::{HashState, self};
+use crate::hash::{RollingHash, self};
 use crate::preprocessor::Seq;
 
 // TODO: maybe implement a more robust process rather than just as libraries
@@ -29,7 +29,7 @@ pub type FingerprintSeq = Vec<(usize, u64)>;
 pub fn get_fingerprint(in_seq: &Seq, k: usize, t: usize) -> FingerprintSeq {
     // First compute all k-grams
     let hash_seq = {
-        let mut initial_state = HashState::from_iter(in_seq[0..k].iter().map(|(_, c)| *c));
+        let mut initial_state = RollingHash::from_iter(in_seq[0..k].iter().map(|(_, c)| *c));
         let mut ret = vec![(0 as usize, initial_state.get_u64())];
         for ((i, win_start), (_, win_end)) in in_seq.iter().zip(in_seq[k..].iter()) {
             initial_state.push_char(*win_end);
@@ -76,3 +76,6 @@ pub fn get_fingerprint(in_seq: &Seq, k: usize, t: usize) -> FingerprintSeq {
 
     fingerprint
 }
+
+#[cfg(test)]
+mod tests;
