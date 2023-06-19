@@ -17,5 +17,7 @@ Cargo.lock
 
 
 # Added by cargo
-
 /target
+
+# Unit testing related
+**/test_fs_local
