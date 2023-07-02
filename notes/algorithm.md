@@ -1,5 +1,7 @@
 # Paper
 
+Paper: [here](http://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf)
+
 ## Legend
 
 * Bold = definition
