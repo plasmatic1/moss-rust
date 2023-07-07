@@ -3,5 +3,12 @@ mod preprocessor;
 mod fingerprint;
 mod matching;
 mod logging;
-mod lang;
 mod hash;
+
+enum Command {
+    // TODO: impl
+}
+
+enum IPCPacket {
+    // TODO: impl
+}

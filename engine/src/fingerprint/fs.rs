@@ -8,7 +8,7 @@ use std::{path::Path, io};
 /// Filesystem abstraction.  Trait that defines a handle to a filesystem with basic functionality.
 /// 
 /// File operations are not mutable as the fs handle itself stays constant throughout.
-pub trait Filesystem {
+pub trait FSHandle {
     /// Writes the specified contents to a path.  If the parent directories do not exist, they will be created.
     fn write_file(&self, path: &Path, contents: &str) -> Result<(), io::Error>;
 
@@ -37,12 +37,16 @@ pub trait Filesystem {
     
     /// Cleanup facility: removes the filesystem pointed at by the handle
     fn clear(&self) -> Result<(), io::Error>;
+
+    /// Return an identifier for the filesystem handle, used for identifying different filesystem handles.
+    /// For example, a local filesystem handle might return the path to the root directory prepended with the word "LocalFS".
+    fn get_identifier(&self) -> String;
 }
 
 // Filesystem types
 mod local;
 mod aws;
 
-pub use local::LocalFilesystem;
+pub use local::LocalFSHandle;
 
 // TODO: implement

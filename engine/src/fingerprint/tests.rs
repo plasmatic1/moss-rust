@@ -1,4 +1,4 @@
-use super::{*, fs::Filesystem};
+use super::{*, fs::FSHandle};
 use std::path::Path;
 
 const TEST_FS_ROOT: &str = "test_fs_local";
@@ -16,7 +16,7 @@ fn clean_fs_local() {
 fn test_fs_local_success() {
     // Create handle
     clean_fs_local();
-    let handle = fs::LocalFilesystem::new(Path::new(TEST_FS_ROOT));
+    let handle = fs::LocalFSHandle::new(Path::new(TEST_FS_ROOT));
 
     // Create some files / test write
     handle.write_file(Path::new("test.txt"), "test").unwrap();
@@ -63,7 +63,7 @@ fn test_fs_local_success() {
 fn test_fs_local_clean() {
     // Create handle
     clean_fs_local();
-    let handle = fs::LocalFilesystem::new(Path::new(TEST_FS_ROOT));
+    let handle = fs::LocalFSHandle::new(Path::new(TEST_FS_ROOT));
 
     // Write a bunch of files
     handle.write_file(Path::new("test1/test.txt"), "test").unwrap();

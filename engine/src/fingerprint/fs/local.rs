@@ -1,12 +1,12 @@
 use std::path::{Path, PathBuf};
 use std::io;
-use super::Filesystem;
+use super::FSHandle;
 
-pub struct LocalFilesystem {
+pub struct LocalFSHandle {
     root: PathBuf,
 }
 
-impl LocalFilesystem {
+impl LocalFSHandle {
     pub fn new(root: &Path) -> Self {
         // Create folder if it does not exist and test
         if !root.exists() {
@@ -57,7 +57,7 @@ impl LocalFilesystem {
     }
 }
 
-impl Filesystem for LocalFilesystem {
+impl FSHandle for LocalFSHandle {
     fn write_file(&self, path: &Path, contents: &str) -> Result<(), io::Error> {
         std::fs::create_dir_all(self.root.join(path).parent().unwrap())?; // `path` should point to a file, so this should never error with correct input
         std::fs::write(self.root.join(path), contents)
@@ -94,5 +94,9 @@ impl Filesystem for LocalFilesystem {
 
     fn clean(&self) -> Result<(), io::Error> {
         self.clean_helper(self.root.as_path())
+    }
+
+    fn get_identifier(&self) -> String {
+        format!("LocalFS: {:?}", self.root)
     }
 }

@@ -5,7 +5,11 @@
 //! The preprocessor is implemented as a sequence of steps, each of which transforms the sequence of characters in some way.  Different language processors 
 //! use various configurations of steps to process code.
 //! 
-//! For the engine, the only interface that needs to be exposed is the langs::get_preprocessor and apply functions.
+//! For the engine, the only interface that needs to be exposed is the `langs` module, which provides preprocessor configurations for various languages
+//! along with functions to resolve the correct language based on file name and extension.
+//! 
+//! It may seem a bit weird to put the language-resolution code in here, but remember that MOSS is designed to be language-agnostic, so any language-specific
+//! processing should be done in the preprocessor.
 
 /// In the preprocessor, strings are treated as pairs of (index, char) where the element s[i] denotes that the substring from indices
 /// s[i].0 to s[i+1].0-1 (inclusive) is compressed as s[i].1.  This is both crucial in intermediate steps and in the final result
@@ -43,8 +47,41 @@ mod steps {
 }
 
 /// Preprocessor implementations for various languages 
+/// Also defines language module to match 
 pub mod langs {
-    use crate::lang::Lang;
+    pub enum Lang {
+        Java,
+        Cpp,
+        Python,
+    }
+
+    impl Lang {
+        /// Converts a full (relative or absolute) file path to a language
+        fn from_path<T: AsRef<str>>(path: &T) -> Option<Lang> {
+            let ext = path.as_ref().split('.').last()?;
+            Self::from_ext(ext)
+        }
+
+        fn from_ext(s: &str) -> Option<Lang> {
+            // C is treated as C++.  Maybe this should be changed in the future?
+            match s {
+                "java" => Some(Lang::Java),
+                "c" => Some(Lang::Cpp),
+                "cc" => Some(Lang::Cpp),
+                "cpp" => Some(Lang::Cpp),
+                "py" => Some(Lang::Python),
+                _ => None,
+            }
+        }
+
+        fn to_ext(&self) -> &'static str {
+            match self {
+                Lang::Java => "java",
+                Lang::Cpp => "cpp",
+                Lang::Python => "py",
+            }
+        }
+    }
 
     #[cfg(not(test))]
     mod java;

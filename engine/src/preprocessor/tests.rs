@@ -1,5 +1,5 @@
 use super::*;
-use crate::lang::Lang;
+use super::langs::Lang;
 
 #[cfg(test)]
 fn unsubst_keywords(s: &str, keywords: Vec<&'static str>) -> String {
