@@ -4,6 +4,8 @@ mod fingerprint;
 mod matching;
 mod logging;
 mod hash;
+mod fs;
+mod db;
 
 enum Command {
     // TODO: impl

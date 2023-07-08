@@ -9,9 +9,6 @@ use crate::preprocessor::Seq;
 // TODO: maybe implement a more robust process rather than just as libraries
 // TODO: tests!!!
 
-pub mod db;
-pub mod fs;
-
 /// Defined in the same way as crate::preprocessor::Seq, but stores the fingerprint of a document instead of its preprocessed form.
 /// The first element of each tuple is the position that the fingerprint starts at in the original document, and the second element is 
 /// the fingerprint.
@@ -76,6 +73,3 @@ pub fn get_fingerprint(in_seq: &Seq, k: usize, t: usize) -> FingerprintSeq {
 
     fingerprint
 }
-
-#[cfg(test)]
-mod tests;

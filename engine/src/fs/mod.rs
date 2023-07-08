@@ -49,4 +49,5 @@ mod aws;
 
 pub use local::LocalFSHandle;
 
-// TODO: implement
+#[cfg(test)]
+mod tests;
