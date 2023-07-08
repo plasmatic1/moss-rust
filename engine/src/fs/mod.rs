@@ -8,7 +8,7 @@ use std::{path::Path, io};
 /// Filesystem abstraction.  Trait that defines a handle to a filesystem with basic functionality.
 /// 
 /// File operations are not mutable as the fs handle itself stays constant throughout.
-pub trait FSHandle {
+pub trait FS {
     /// Writes the specified contents to a path.  If the parent directories do not exist, they will be created.
     fn write_file(&self, path: &Path, contents: &str) -> Result<(), io::Error>;
 

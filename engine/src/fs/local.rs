@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 use std::io;
-use super::FSHandle;
+use super::FS;
 
 pub struct LocalFSHandle {
     root: PathBuf,
@@ -57,7 +57,7 @@ impl LocalFSHandle {
     }
 }
 
-impl FSHandle for LocalFSHandle {
+impl FS for LocalFSHandle {
     fn write_file(&self, path: &Path, contents: &str) -> Result<(), io::Error> {
         std::fs::create_dir_all(self.root.join(path).parent().unwrap())?; // `path` should point to a file, so this should never error with correct input
         std::fs::write(self.root.join(path), contents)
