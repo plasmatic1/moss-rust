@@ -9,7 +9,12 @@ Parallel implementation of the MOSS program for plagiarism detection.  Goal is t
 
 ## Compilation Options
 
-* `cargo test` for 
+* `cargo test` for tests
+    * Run in `engine/` for engine tests
+
+## Installation
+
+
 
 ## TODO
 

@@ -21,3 +21,6 @@ Cargo.lock
 
 # Unit testing related
 **/test_fs_local
+
+# db
+engine/db.sqlite3
